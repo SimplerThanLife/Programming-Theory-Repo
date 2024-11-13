@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class AnimalManager : MonoBehaviour
 {
+    public static AnimalManager Instance { get; private set; }
     private Animal selectedAnimal;
-
-    private static AnimalManager Instance { get; private set; }
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject); // Persist across scenes
         }
         else
@@ -25,6 +24,11 @@ public class AnimalManager : MonoBehaviour
     {
         selectedAnimal = animal;
         Debug.Log("Selected Animal: " + selectedAnimal.GetType().Name);
+    }
+
+    public Animal GetSelectedAnimal()
+    {
+        return selectedAnimal;
     }
 
     public void FeedSelectedAnimal()
