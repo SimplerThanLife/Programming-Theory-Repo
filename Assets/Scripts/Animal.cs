@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Animal : MonoBehaviour
 {
     // Properties
-    public int HungerLevel { get; protected set; }
+    public float HungerLevel = 10;
     public int HappinessLevel { get; protected set; }
 
     private float hungerDecayTimer = 2.0f; // Time in seconds between hunger decay
@@ -13,7 +13,8 @@ public abstract class Animal : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating(nameof(DecayHunger), hungerDecayTimer, hungerDecayTimer);
+        StartCoroutine(DecayHungerOverTime());
+        //InvokeRepeating(nameof(DecayHunger), hungerDecayTimer, hungerDecayTimer);
         InvokeRepeating(nameof(DecayHappiness), happinessDecayTimer, happinessDecayTimer);
     }
 
@@ -21,6 +22,20 @@ public abstract class Animal : MonoBehaviour
     private void DecayHunger()
     {
         HungerLevel = Mathf.Max(HungerLevel - 1, 0);
+
+        GameController gameController = FindObjectOfType<GameController>();
+            // Call the method to update the hunger bar in the UI
+        if (gameController != null)
+        {
+            gameController.UpdateHungerBar();  // Update the hunger bar in the GameController
+            Debug.Log("Hunger bar updated.");
+        }
+        else
+        {
+            Debug.LogError("GameController not found!");
+        }
+        Debug.Log("Hunger Level: " + HungerLevel);
+
         if (HungerLevel == 0)
         {
             FindObjectOfType<GameController>().EndGame();
@@ -31,7 +46,14 @@ public abstract class Animal : MonoBehaviour
     {
         HappinessLevel = Mathf.Max(HappinessLevel - 1, 0);
     }
-
+    private IEnumerator DecayHungerOverTime()
+    {
+        while (HungerLevel > 0)
+        {
+            yield return new WaitForSeconds(5);  // Decay every 5 seconds
+            DecayHunger();
+        }
+    }
     // Abstract methods for each action
     public abstract void Feed();
     public abstract void Pet();

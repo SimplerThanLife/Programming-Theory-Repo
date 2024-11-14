@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    public Slider hungerSlider;
     private AnimalManager animalManager;
 
     private void Start() 
@@ -15,7 +17,23 @@ public class GameController : MonoBehaviour
         {
             InitializeSelectedAnimal();
         }
-        
+
+                // Check if AnimalManager is properly loaded
+        if (AnimalManager.Instance != null)
+        {
+            Debug.Log("AnimalManager is loaded.");
+        }
+        else
+        {
+            Debug.LogError("AnimalManager instance not found!");
+        }
+
+         if (hungerSlider != null)
+        {
+            hungerSlider.maxValue = 10; // Max hunger level
+            hungerSlider.minValue = 0;  // Min hunger level
+            hungerSlider.value = animalManager.GetSelectedAnimal().HungerLevel;
+        }
     }
     
     public void StartGame(Animal chosenAnimal)
@@ -43,6 +61,29 @@ public class GameController : MonoBehaviour
             Debug.LogError("No animal selected! Returning to title screen.");
             // Optionally, load the title screen again if no animal was selected
             SceneManager.LoadScene("TitleScreen"); // Replace "TitleScreen" with your title scene name
+        }
+    }
+
+        public void FeedSelectedAnimal()
+    {
+        if (animalManager != null && animalManager.GetSelectedAnimal() != null)
+        {
+            animalManager.GetSelectedAnimal().Feed();
+            UpdateHungerBar();
+            Debug.Log("Feeding selected animal.");
+        }
+        else
+        {
+            Debug.LogError("No animal selected to feed.");
+        }
+    }
+
+    public void UpdateHungerBar()
+    {
+         // Update the slider's value based on the selected animal's hunger level
+        if (animalManager != null && animalManager.GetSelectedAnimal() != null)
+        {
+            hungerSlider.value = animalManager.GetSelectedAnimal().HungerLevel;
         }
     }
 

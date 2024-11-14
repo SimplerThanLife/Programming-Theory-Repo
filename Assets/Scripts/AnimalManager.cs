@@ -31,14 +31,6 @@ public class AnimalManager : MonoBehaviour
         return selectedAnimal;
     }
 
-    public void FeedSelectedAnimal()
-    {
-        if (selectedAnimal != null)
-        {
-            selectedAnimal.Feed();
-        }
-    }
-
     public void PetSelectedAnimal()
     {
         if (selectedAnimal != null)
