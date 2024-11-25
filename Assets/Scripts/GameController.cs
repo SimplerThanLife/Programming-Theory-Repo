@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    public Slider hungerSlider;
+    public TextMeshProUGUI hungerText;
     private AnimalManager animalManager;
 
     private void Start() 
@@ -27,13 +28,6 @@ public class GameController : MonoBehaviour
         {
             Debug.LogError("AnimalManager instance not found!");
         }
-
-         if (hungerSlider != null)
-        {
-            hungerSlider.maxValue = 10; // Max hunger level
-            hungerSlider.minValue = 0;  // Min hunger level
-            hungerSlider.value = animalManager.GetSelectedAnimal().HungerLevel;
-        }
     }
     
     public void StartGame(Animal chosenAnimal)
@@ -53,8 +47,9 @@ public class GameController : MonoBehaviour
         if (selectedAnimal != null)
         {
             // Instantiate the selected animal in the game scene
-            Instantiate(selectedAnimal, new Vector3(0, 0, 0), Quaternion.identity); // Adjust position as needed
-            Debug.Log("Initialized selected animal: " + selectedAnimal.GetType().Name);
+            Animal selectedAnimalInstance = Instantiate(selectedAnimal, new Vector3(0, 0, 0), Quaternion.identity); // Adjust position as needed
+            AnimalManager.Instance.SelectAnimal(selectedAnimalInstance);
+            Debug.Log("Initialized selected animal: " + selectedAnimalInstance.GetType().Name);
         }
         else
         {
@@ -69,7 +64,7 @@ public class GameController : MonoBehaviour
         if (animalManager != null && animalManager.GetSelectedAnimal() != null)
         {
             animalManager.GetSelectedAnimal().Feed();
-            UpdateHungerBar();
+            UpdateHungerText();
             Debug.Log("Feeding selected animal.");
         }
         else
@@ -78,12 +73,17 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void UpdateHungerBar()
+    public void UpdateHungerText()
     {
-         // Update the slider's value based on the selected animal's hunger level
-        if (animalManager != null && animalManager.GetSelectedAnimal() != null)
+        Animal selectedAnimal = AnimalManager.Instance.GetSelectedAnimal();
+        if (selectedAnimal != null)
         {
-            hungerSlider.value = animalManager.GetSelectedAnimal().HungerLevel;
+            Debug.Log($"Updating hunger text for Animal Instance ID: {selectedAnimal.GetInstanceID()}");
+            hungerText.text = $"Hunger: {selectedAnimal.HungerLevel}/{selectedAnimal.MaxHungerLevel}";
+        }
+        else
+        {
+            Debug.LogError("No selected animal found for hunger update!");
         }
     }
 

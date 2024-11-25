@@ -5,7 +5,8 @@ using UnityEngine;
 public abstract class Animal : MonoBehaviour
 {
     // Properties
-    public float HungerLevel = 10;
+    public int HungerLevel { get; protected set; }
+    public int MaxHungerLevel { get; protected set; } = 10; // Default max value
     public int HappinessLevel { get; protected set; }
 
     private float hungerDecayTimer = 2.0f; // Time in seconds between hunger decay
@@ -13,9 +14,20 @@ public abstract class Animal : MonoBehaviour
 
     private void Start()
     {
+        HungerLevel = MaxHungerLevel; // Initialize HungerLevel to MaxHungerLevel
+        GameController gameController = FindObjectOfType<GameController>();
+    if (gameController != null)
+    {
+        gameController.UpdateHungerText(); // Call to refresh hunger display
+    }
+    else
+    {
+        Debug.LogError("GameController not found!");
+    }
         StartCoroutine(DecayHungerOverTime());
         //InvokeRepeating(nameof(DecayHunger), hungerDecayTimer, hungerDecayTimer);
         InvokeRepeating(nameof(DecayHappiness), happinessDecayTimer, happinessDecayTimer);
+
     }
 
     // Decay over time
@@ -27,7 +39,7 @@ public abstract class Animal : MonoBehaviour
             // Call the method to update the hunger bar in the UI
         if (gameController != null)
         {
-            gameController.UpdateHungerBar();  // Update the hunger bar in the GameController
+            gameController.UpdateHungerText();  // Update the hunger bar in the GameController
             Debug.Log("Hunger bar updated.");
         }
         else
@@ -50,9 +62,12 @@ public abstract class Animal : MonoBehaviour
     {
         while (HungerLevel > 0)
         {
+            Debug.Log("Waiting to decay hunger...");
             yield return new WaitForSeconds(5);  // Decay every 5 seconds
+            Debug.Log("Triggering DecayHunger...");
             DecayHunger();
         }
+        Debug.Log("Hunger has reached zero, stopping decay.");
     }
     // Abstract methods for each action
     public abstract void Feed();

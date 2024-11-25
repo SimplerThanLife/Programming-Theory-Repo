@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class Dog : Animal
 {
-    private void Awake()
-    {
-        HungerLevel = 10;
-        HappinessLevel = 10;
-    }
-
     public override void Feed()
     {
-        HungerLevel = Mathf.Min(HungerLevel + 3, 10);
+        HungerLevel = Mathf.Min(HungerLevel + 3, MaxHungerLevel);
         Debug.Log("Dog is fed! Hunger Level: " + HungerLevel);
+        
+    GameController gameController = FindObjectOfType<GameController>();
+    if (gameController != null)
+    {
+        gameController.UpdateHungerText(); // Call to refresh hunger display
+    }
+    else
+    {
+        Debug.LogError("GameController not found!");
+    }
     }
 
     public override void Pet()
