@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dog : Animal
+public class Dog : Animal //INHERITANCE
 {
-    public override void Feed()
+    public override void Feed()//POLYMORPHISM
     {
         HungerLevel = Mathf.Min(HungerLevel + 2, MaxHungerLevel);
         Debug.Log("Dog is fed! Hunger Level: " + HungerLevel);
@@ -20,7 +20,7 @@ public class Dog : Animal
         }
     }
 
-    public override void Pet()
+    public override void Pet()//POLYMORPHISM
     {
         HappinessLevel = Mathf.Min(HappinessLevel + 3, 10);
         Debug.Log("Dog is petted! Happiness Level: " + HappinessLevel);

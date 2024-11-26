@@ -5,16 +5,18 @@ using UnityEngine;
 public abstract class Animal : MonoBehaviour
 {
     // Properties
-    public int HungerLevel { get; protected set; }
+    public int HungerLevel { get; protected set; } //ENCAPSULATION
     public int MaxHungerLevel { get; protected set; } = 10; // Default max value
-    public int HappinessLevel { get; protected set; }
+    public int HappinessLevel { get; protected set; } //ENCAPSULATION
     public int MaxHappinessLevel { get; protected set; } = 10; // Default max value
+
+    private GameController gameController;
 
     private void Start()
     {
         HungerLevel = MaxHungerLevel; // Initialize HungerLevel to MaxHungerLevel
         HappinessLevel = MaxHappinessLevel;
-        GameController gameController = FindObjectOfType<GameController>();
+        gameController = FindObjectOfType<GameController>();
     if (gameController != null)
     {
         gameController.UpdateHungerText(); // Call to refresh hunger display
@@ -34,7 +36,7 @@ public abstract class Animal : MonoBehaviour
     {
         HungerLevel = Mathf.Max(HungerLevel - 1, 0);
 
-        GameController gameController = FindObjectOfType<GameController>();
+        gameController = FindObjectOfType<GameController>();
             // Call the method to update the hunger bar in the UI
         if (gameController != null)
         {
@@ -56,7 +58,7 @@ public abstract class Animal : MonoBehaviour
     private void DecayHappiness()
     {
         HappinessLevel = Mathf.Max(HappinessLevel - 1, 0);
-        GameController gameController = FindObjectOfType<GameController>();
+        gameController = FindObjectOfType<GameController>();
             // Call the method to update the hunger bar in the UI
         if (gameController != null)
         {
