@@ -4,21 +4,33 @@ using UnityEngine;
 
 public class Cat : Animal
 {
-    private void Awake()
-    {
-        HungerLevel = 10;
-        HappinessLevel = 10;
-    }
-
     public override void Feed()
     {
-        HungerLevel = Mathf.Min(HungerLevel + 3, 10);
+        HungerLevel = Mathf.Min(HungerLevel + 3, MaxHungerLevel);
         Debug.Log("Cat is fed! Hunger Level: " + HungerLevel);
+        GameController gameController = FindObjectOfType<GameController>();
+        if (gameController != null)
+        {
+            gameController.UpdateHungerText(); // Call to refresh hunger display
+        }
+        else
+        {
+            Debug.LogError("GameController not found!");
+        }
     }
 
     public override void Pet()
     {
-        HappinessLevel = Mathf.Min(HappinessLevel + 2, 10);
+        HappinessLevel = Mathf.Min(HappinessLevel + 1, 10);
         Debug.Log("Cat is petted! Happiness Level: " + HappinessLevel);
+        GameController gameController = FindObjectOfType<GameController>();
+        if (gameController != null)
+        {
+            gameController.UpdateHappinessText(); // Call to refresh hunger display
+        }
+        else
+        {
+            Debug.LogError("GameController not found!");
+        }
     }
 }

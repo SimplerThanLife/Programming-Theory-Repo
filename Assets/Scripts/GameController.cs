@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public TextMeshProUGUI hungerText;
+    public TextMeshProUGUI happinessText;
     private AnimalManager animalManager;
 
     private void Start() 
@@ -47,7 +48,7 @@ public class GameController : MonoBehaviour
         if (selectedAnimal != null)
         {
             // Instantiate the selected animal in the game scene
-            Animal selectedAnimalInstance = Instantiate(selectedAnimal, new Vector3(0, 0, 0), Quaternion.identity); // Adjust position as needed
+            Animal selectedAnimalInstance = Instantiate(selectedAnimal, new Vector3(2, 0, 0), Quaternion.identity); // Adjust position as needed
             AnimalManager.Instance.SelectAnimal(selectedAnimalInstance);
             Debug.Log("Initialized selected animal: " + selectedAnimalInstance.GetType().Name);
         }
@@ -73,6 +74,20 @@ public class GameController : MonoBehaviour
         }
     }
 
+     public void PetSelectedAnimal()
+    {
+        if (animalManager != null && animalManager.GetSelectedAnimal() != null)
+        {
+            animalManager.GetSelectedAnimal().Pet();
+            UpdateHappinessText();
+            Debug.Log("Petting selected animal.");
+        }
+        else
+        {
+            Debug.LogError("No animal selected to pet.");
+        }
+    }
+
     public void UpdateHungerText()
     {
         Animal selectedAnimal = AnimalManager.Instance.GetSelectedAnimal();
@@ -84,6 +99,20 @@ public class GameController : MonoBehaviour
         else
         {
             Debug.LogError("No selected animal found for hunger update!");
+        }
+    }
+
+      public void UpdateHappinessText()
+    {
+        Animal selectedAnimal = AnimalManager.Instance.GetSelectedAnimal();
+        if (selectedAnimal != null)
+        {
+            Debug.Log($"Updating happiness text for Animal Instance ID: {selectedAnimal.GetInstanceID()}");
+            happinessText.text = $"Happiness: {selectedAnimal.HappinessLevel}/{selectedAnimal.MaxHappinessLevel}";
+        }
+        else
+        {
+            Debug.LogError("No selected animal found for happiness update!");
         }
     }
 
